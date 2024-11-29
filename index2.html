@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIDDLE!</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: red;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      transition: background-color 0.5s ease; /* Smooth transition for color changes */
+    }
+
+    h1 {
+      color: white;
+      font-size: 5rem;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      transition: transform 0.8s ease-in-out, color 0.5s ease;
+      z-index: 10; /* Ensure it's above the background */
+    }
+
+    img.fiddle-photo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 100px;
+      animation: spinImage 5s infinite linear reverse;
+      z-index: 10; /* Ensure it's above the background */
+    }
+
+    .background-photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.45; /* Make it faint */
+      z-index: 1; /* Behind everything */
+      object-fit: cover; /* Make sure it fills the screen */
+    }
+
+    .counter {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 1.5rem;
+      z-index: 20;
+      transition: color 0.5s ease; /* Smooth transition for text color */
+    }
+
+    @keyframes spinImage {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Image -->
+  <img src="miller.jpeg" alt="Background" class="background-photo">
+
+  <!-- FIDDLE Word -->
+  <h1 id="fiddle-word">FIDDLE!</h1>
+
+  <!-- Fiddle Image -->
+  <img src="fiddle!.png" alt="Fiddle Image" class="fiddle-photo">
+
+  <!-- Counter -->
+  <div class="counter" id="click-counter">Clicks: 0</div>
+
+  <!-- Audio -->
+  <audio id="fiddle-sound" src="FIDDLE.mp3"></audio>
+  <audio id="special-sound" src="amazing.mp3"></audio>
+
+  <script>
+    // Get the elements
+    const fiddleWord = document.getElementById('fiddle-word');
+    const fiddleSound = document.getElementById('fiddle-sound');
+    const specialSound = document.getElementById('special-sound');
+    const clickCounter = document.getElementById('click-counter');
+    const body = document.body;
+
+    // Initialize click count
+    let clickCount = 0;
+
+    // Add click event listener
+    fiddleWord.addEventListener('click', () => {
+      // Increment click count
+      clickCount++;
+      clickCounter.textContent = `Clicks: ${clickCount}`;
+
+      // Play sound
+      fiddleSound.currentTime = 0;
+      fiddleSound.play();
+
+      // Add spin animation
+      fiddleWord.style.transform = 'rotate(360deg)';
+
+      // Reset spin after animation ends
+      setTimeout(() => {
+        fiddleWord.style.transform = 'rotate(0deg)';
+      }, 800);
+
+      // Check for multiples of 10
+      if (clickCount % 10 === 0) {
+        // Play special sound
+        specialSound.currentTime = 0;
+        specialSound.play();
+
+        // Change background color randomly
+        body.style.backgroundColor = getRandomColor();
+
+        // Change text color
+        clickCounter.style.color = getRandomColor();
+
+        // Add bounce animation to FIDDLE word
+        fiddleWord.style.animation = 'bounce 0.8s ease';
+        setTimeout(() => {
+          fiddleWord.style.animation = '';
+        }, 800);
+      }
+    });
+
+    // Function to generate random colors
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
